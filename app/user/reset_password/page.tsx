@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import SetNewPasswordForm from "@/components/auth/SetNewPasswordForm";
 import api from "@/lib/api";
 
-export default function UserResetPassword() {
+// 创建一个组件来使用 useSearchParams
+function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -65,5 +66,18 @@ export default function UserResetPassword() {
       error={error}
       success={success}
     />
+  );
+}
+
+// 创建加载状态组件
+function LoadingState() {
+  return <div className="text-center p-4">正在加载...</div>;
+}
+
+export default function UserResetPassword() {
+  return (
+    <Suspense fallback={<LoadingState />}>
+      <ResetPasswordForm />
+    </Suspense>
   );
 }
