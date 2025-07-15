@@ -4,9 +4,9 @@ import animate from "tailwindcss-animate";
 export default {
   darkMode: ["class"],
   content: [
+    "./app/**/*.{ts,tsx}", // App Router 代码
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
-    "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
   ],
   prefix: "",
