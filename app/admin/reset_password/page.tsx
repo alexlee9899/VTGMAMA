@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import SetNewPasswordForm from "@/components/auth/SetNewPasswordForm";
 import api from "@/lib/api";
 
-export default function AdminResetPassword() {
+// 创建一个内部组件来使用useSearchParams
+function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -65,5 +66,14 @@ export default function AdminResetPassword() {
       error={error}
       success={success}
     />
+  );
+}
+
+// 主页面组件使用Suspense包裹内部组件
+export default function AdminResetPassword() {
+  return (
+    <Suspense fallback={<div>加载中...</div>}>
+      <ResetPasswordForm />
+    </Suspense>
   );
 }
