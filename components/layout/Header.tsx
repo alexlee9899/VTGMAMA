@@ -128,7 +128,7 @@ export default function Header() {
                 href="/products"
                 className="text-gray-700 hover:text-primary"
               >
-                Products
+                Product
               </Link>
               <Link href="/about" className="text-gray-700 hover:text-primary">
                 About Us
