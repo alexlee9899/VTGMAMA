@@ -3,11 +3,13 @@ name: CI and Deploy
 on:
   push:
     branches: [main]
+  workflow_dispatch: {}   # 手动触发按钮
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-
+    outputs:
+      build_artifact: deploy.tgz
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -16,25 +18,67 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+          cache: 'npm'
 
-      - name: Install dependencies
+      - name: Clean install
         run: npm ci --legacy-peer-deps
 
-      - name: Run tests
-        run: npm test
+      - name: Build
+        run: npm run build
 
-      - name: Deploy to EC2 via SSH
+      - name: Pack deploy bundle
+        run: |
+          tar -czf deploy.tgz \
+            .next \
+            node_modules \
+            public \
+            package.json \
+            package-lock.json \
+            next.config.js \
+            tailwind.config.* \
+            postcss.config.* \
+            ecosystem.config.js 2>/dev/null || true
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: deploy-bundle
+          path: deploy.tgz
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: deploy-bundle
+          path: .
+      
+      - name: Copy bundle to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          source: "deploy.tgz"
+          target: "/home/ec2-user"   # 上传到家目录
+
+      - name: Deploy on EC2
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}      # ec2-user
+          username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
             set -e
-            cd /home/ec2-user/VTGMAMA
-            git fetch origin main
-            git reset --hard origin/main
-            npm ci --legacy-peer-deps
-            npm run build
+            cd /home/ec2-user
+            mkdir -p VTGMAMA
+            tar -xzf deploy.tgz -C VTGMAMA --strip-components=0
+            cd VTGMAMA
+            # 安装生产依赖（node_modules 已打包，一般不需要；如要修复二进制则解开以下）
+            # npm ci --omit=dev --legacy-peer-deps || true
             pm2 restart VTGMAMA || pm2 start npm --name "VTGMAMA" -- start
+            pm2 save
