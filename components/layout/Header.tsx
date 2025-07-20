@@ -118,6 +118,16 @@ export default function Header() {
               >
                 Order Center
               </Link>
+              <Link
+                href="/admin/center/promote"
+                className={`py-2 px-4 rounded transition-colors ${
+                  pathname === "/admin/center/promote"
+                    ? "bg-gray-800 text-white"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                Promote Center
+              </Link>
             </nav>
           ) : (
             <nav className="hidden md:flex items-center space-x-8">

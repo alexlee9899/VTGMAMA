@@ -156,6 +156,7 @@ export default function OrderCenter() {
           setSelectedOrder={setSelectedOrder}
           getStatusBadgeClass={getStatusBadgeClass}
           formatDate={formatDate}
+          refreshOrders={fetchOrders}
         />
       ) : (
         // Orders list view

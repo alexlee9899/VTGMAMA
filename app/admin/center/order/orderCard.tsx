@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 
 interface OrderItem {
   product_id: string;
@@ -54,12 +55,65 @@ const OrderCard = ({
   setSelectedOrder,
   getStatusBadgeClass,
   formatDate,
+  refreshOrders, // 添加刷新订单列表的函数
 }: {
   selectedOrder: Order;
   setSelectedOrder: (order: Order | null) => void;
   getStatusBadgeClass: (status: string) => string;
   formatDate: (dateString: string) => string;
+  refreshOrders?: () => void; // 可选参数，用于刷新订单列表
 }) => {
+  // 添加状态管理弹窗和输入
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [trackNumber, setTrackNumber] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  // 处理发货操作
+  const handleDispatch = async () => {
+    if (!trackNumber.trim()) {
+      setError("请输入运单号");
+      return;
+    }
+
+    setIsLoading(true);
+    setError("");
+
+    try {
+      // 发送发货请求
+      const response = await axios.post(
+        "http://3.25.93.171:8000/order/ship_order",
+        {
+          order_id: selectedOrder.order_id,
+          track_number: trackNumber,
+        }
+      );
+
+      // 请求成功
+      setSuccess("发货成功！订单状态已更新");
+      setIsModalOpen(false);
+
+      // 更新本地订单状态
+      const updatedOrder = {
+        ...selectedOrder,
+        status: "dispatched",
+        track_number: trackNumber,
+      };
+      setSelectedOrder(updatedOrder);
+
+      // 如果存在刷新函数，调用它刷新订单列表
+      if (refreshOrders) {
+        refreshOrders();
+      }
+    } catch (err) {
+      console.error("发货失败:", err);
+      setError("发货失败，请重试");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div>
       <div className="bg-white shadow-md rounded-lg p-6">
@@ -67,13 +121,31 @@ const OrderCard = ({
           <h2 className="text-xl font-semibold">
             Order #{selectedOrder.order_id}
           </h2>
-          <button
-            onClick={() => setSelectedOrder(null)}
-            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md transition-colors"
-          >
-            Back to List
-          </button>
+          <div className="flex space-x-2">
+            {/* 添加Dispatch按钮，仅在订单状态不是dispatched时显示 */}
+            {selectedOrder.status !== "dispatched" &&
+              selectedOrder.status === "paid" && (
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="px-4 py-2 bg-green-500 text-white hover:bg-green-600 rounded-md transition-colors"
+                >
+                  Dispatch
+                </button>
+              )}
+            <button
+              onClick={() => setSelectedOrder(null)}
+              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md transition-colors"
+            >
+              Back to List
+            </button>
+          </div>
         </div>
+
+        {success && (
+          <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
+            {success}
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="bg-gray-50 p-4 rounded-md">
@@ -238,6 +310,53 @@ const OrderCard = ({
           </div>
         </div>
       </div>
+
+      {/* 添加Modal弹窗 */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <h3 className="text-lg font-semibold mb-4">发货订单</h3>
+            <p className="mb-4 text-sm text-gray-600">
+              请输入此订单的快递运单号
+            </p>
+
+            {error && (
+              <div className="mb-4 p-2 bg-red-100 border border-red-400 text-red-700 rounded">
+                {error}
+              </div>
+            )}
+
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-medium mb-2">
+                运单号
+              </label>
+              <input
+                type="text"
+                value={trackNumber}
+                onChange={(e) => setTrackNumber(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="请输入运单号"
+              />
+            </div>
+
+            <div className="flex justify-end space-x-2">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md transition-colors"
+              >
+                取消
+              </button>
+              <button
+                onClick={handleDispatch}
+                disabled={isLoading}
+                className="px-4 py-2 bg-green-500 text-white hover:bg-green-600 rounded-md transition-colors disabled:bg-green-300"
+              >
+                {isLoading ? "处理中..." : "确认发货"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
