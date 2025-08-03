@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Modal } from "antd";
 import Image from "next/image";
+import { API_BASE_URL } from "@/lib/config";
 
 interface Category {
   _id: string;
@@ -68,9 +69,7 @@ export default function CategoryManagement() {
   const fetchCategories = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        "http://3.25.93.171:8000/product/category/full"
-      );
+      const response = await axios.get(`${API_BASE_URL}/product/category/full`);
       setCategories(response.data);
 
       // Filter parent categories (categories with parent_id as null)
@@ -102,7 +101,7 @@ export default function CategoryManagement() {
       }
 
       await axios.post(
-        "http://3.25.93.171:8000/product/category/create",
+        `${API_BASE_URL}/product/category/create`,
         {
           name: newCategory.name,
           parent_id: newCategory.parent_id,
@@ -142,7 +141,7 @@ export default function CategoryManagement() {
       }
 
       await axios.put(
-        `http://3.25.93.171:8000/product/category/update/${editCategory._id}`,
+        `${API_BASE_URL}/product/category/update/${editCategory._id}`,
         {
           name: editCategory.name,
           parent_id: editCategory.parent_id,
@@ -188,7 +187,7 @@ export default function CategoryManagement() {
       }
 
       await axios.delete(
-        `http://3.25.93.171:8000/product/category/delete/${categoryId}`,
+        `${API_BASE_URL}/product/category/delete/${categoryId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -230,7 +229,7 @@ export default function CategoryManagement() {
       }
 
       const response = await axios.get(
-        `http://3.25.93.171:8000/product/category/${categoryId}/products`,
+        `${API_BASE_URL}/product/category/${categoryId}/products`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

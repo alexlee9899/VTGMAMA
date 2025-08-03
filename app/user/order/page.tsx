@@ -4,6 +4,7 @@ import axios from "axios";
 import React, { useEffect, useState, useCallback } from "react";
 import { useAuth } from "@/components/auth/AuthContext";
 import OrderCard from "./orderCard";
+import { API_BASE_URL } from "@/lib/config";
 
 interface OrderItem {
   product_id: string;
@@ -91,7 +92,7 @@ export default function UserOrderPage() {
 
       // 修复POST请求格式
       const response = await axios.post<OrderResponse>(
-        "http://3.25.93.171:8000/order/history",
+        `${API_BASE_URL}/order/history`,
         {},
         {
           headers: {

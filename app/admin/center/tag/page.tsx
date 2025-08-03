@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { Modal } from "antd";
 import Image from "next/image";
+import { API_BASE_URL } from "@/lib/config";
 
 interface Tag {
   _id: string;
@@ -63,14 +64,11 @@ export default function TagManagement() {
         throw new Error("未授权，请先登录");
       }
 
-      const response = await axios.get(
-        "http://3.25.93.171:8000/product/tag/full",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${API_BASE_URL}/product/tag/full`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setTags(response.data);
       setError(null);
     } catch (error) {
@@ -103,7 +101,7 @@ export default function TagManagement() {
       }
 
       await axios.post(
-        "http://3.25.93.171:8000/product/tag/create",
+        `${API_BASE_URL}/product/tag/create`,
         {
           name: newTag.name,
         },
@@ -143,7 +141,7 @@ export default function TagManagement() {
       }
 
       await axios.post(
-        `http://3.25.93.171:8000/product/tag/update/${editTag._id}`,
+        `${API_BASE_URL}/product/tag/update/${editTag._id}`,
         {
           name: editTag.name,
         },
@@ -184,14 +182,11 @@ export default function TagManagement() {
         throw new Error("未授权，请先登录");
       }
 
-      await axios.delete(
-        `http://3.25.93.171:8000/product/tag/delete/${tagId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.delete(`${API_BASE_URL}/product/tag/delete/${tagId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       fetchTags(); // 重新获取标签列表
       setNotification({
         type: "success",
@@ -227,7 +222,7 @@ export default function TagManagement() {
       }
 
       const response = await axios.get(
-        `http://3.25.93.171:8000/product/tag/${tagId}/products`,
+        `${API_BASE_URL}/product/tag/${tagId}/products`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

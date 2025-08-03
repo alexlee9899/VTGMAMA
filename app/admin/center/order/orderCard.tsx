@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { API_BASE_URL } from "@/lib/config";
 
 interface OrderItem {
   product_id: string;
@@ -82,13 +83,10 @@ const OrderCard = ({
 
     try {
       // 发送发货请求
-      const response = await axios.post(
-        "http://3.25.93.171:8000/order/ship_order",
-        {
-          order_id: selectedOrder.order_id,
-          track_number: trackNumber,
-        }
-      );
+      const response = await axios.post(`${API_BASE_URL}/order/ship_order`, {
+        order_id: selectedOrder.order_id,
+        track_number: trackNumber,
+      });
 
       // 请求成功
       setSuccess("发货成功！订单状态已更新");

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { FiEye, FiEdit, FiTrash2, FiPlus } from "react-icons/fi";
+import { API_BASE_URL } from "@/lib/config";
 
 // 动态导入组件
 const ProductDetails = dynamic(() => import("./ProductDetails"), {
@@ -65,6 +66,41 @@ export default function ProductManagement() {
 
   // 获取产品数据
   useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        const token = getAdminToken();
+        if (!token) {
+          throw new Error("Authorization token not found");
+        }
+
+        const response = await fetch(`${API_BASE_URL}/admin/shop_products`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(
+            `Request failed: ${response.status} ${response.statusText}`
+          );
+        }
+
+        const data = await response.json();
+        setProducts(data);
+        setError(null);
+      } catch (err) {
+        console.error("Failed to fetch products:", err);
+        setError(
+          err instanceof Error ? err.message : "Error retrieving products"
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchProducts();
   }, []);
 

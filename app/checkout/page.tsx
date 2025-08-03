@@ -5,8 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useShop } from "../contexts/ShopContext";
-
-const API_BASE_URL = "http://3.25.93.171:8000";
+import { API_BASE_URL } from "@/lib/config";
 
 // addressBody类型
 interface AddressBody {

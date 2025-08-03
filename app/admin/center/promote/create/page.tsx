@@ -5,6 +5,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { PromoteCodeRequest } from "../types";
+import { API_BASE_URL } from "@/lib/config";
 
 export default function CreatePromotePage() {
   const router = useRouter();
@@ -83,7 +84,7 @@ export default function CreatePromotePage() {
         end_time: new Date(formData.end_time).toISOString(),
       };
 
-      await axios.post("http://3.25.93.171:8000/promote/create", requestData, {
+      await axios.post(`${API_BASE_URL}/promote/create`, requestData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

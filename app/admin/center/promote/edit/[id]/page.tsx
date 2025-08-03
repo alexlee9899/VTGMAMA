@@ -5,6 +5,7 @@ import axios from "axios";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { PromoteCode, PromoteCodeRequest } from "../../types";
+import { API_BASE_URL } from "@/lib/config";
 
 export default function EditPromotePage() {
   const router = useRouter();
@@ -43,14 +44,11 @@ export default function EditPromotePage() {
           throw new Error("未授权，请先登录");
         }
 
-        const response = await axios.get(
-          `http://3.25.93.171:8000/promote/get/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${API_BASE_URL}/promote/get/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         const data = response.data as PromoteCode;
 
@@ -133,15 +131,11 @@ export default function EditPromotePage() {
         end_time: new Date(formData.end_time).toISOString(),
       };
 
-      await axios.post(
-        `http://3.25.93.171:8000/promote/update/${id}`,
-        requestData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.post(`${API_BASE_URL}/promote/update/${id}`, requestData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       setSuccess("促销码更新成功");
 

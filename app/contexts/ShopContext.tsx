@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { API_BASE_URL } from "@/lib/config";
 
 export interface Product {
   _id: string;
@@ -61,9 +62,7 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
   // Get all products
   const fetchProducts = async () => {
     try {
-      const response = await fetch(
-        "http://3.25.93.171:8000/product/all_products"
-      );
+      const response = await fetch(`${API_BASE_URL}/product/all_products`);
       if (!response.ok) {
         throw new Error("Failed to fetch products");
       }
@@ -78,9 +77,7 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
   // Get all categories
   const fetchCategories = async () => {
     try {
-      const response = await fetch(
-        "http://3.25.93.171:8000/product/category/full"
-      );
+      const response = await fetch(`${API_BASE_URL}/product/category/full`);
       if (!response.ok) {
         throw new Error("Failed to fetch categories");
       }
@@ -97,7 +94,7 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
   const fetchCategoryProducts = async (categoryId: string) => {
     try {
       const response = await fetch(
-        `http://3.25.93.171:8000/product/category/${categoryId}/products`
+        `${API_BASE_URL}/product/category/${categoryId}/products`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch category products");

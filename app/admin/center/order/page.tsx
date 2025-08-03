@@ -3,6 +3,7 @@
 import axios from "axios";
 import React, { useEffect, useState, useCallback } from "react";
 import OrderCard from "./orderCard";
+import { API_BASE_URL } from "@/lib/config";
 
 interface OrderItem {
   product_id: string;
@@ -84,7 +85,7 @@ export default function OrderCenter() {
       }
 
       const response = await axios.get<OrderResponse>(
-        "http://3.25.93.171:8000/admin/shop_orders",
+        `${API_BASE_URL}/admin/shop_orders`,
         {
           params: {
             page_size: pageSize,
