@@ -5,6 +5,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { AuthProvider } from "@/components/auth/AuthContext";
 import { ShopProvider } from "./contexts/ShopContext";
+import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,6 +21,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh">
+      <head>
+        <Script src="/config.js" strategy="beforeInteractive" />
+      </head>
       <body className={inter.className}>
         <AuthProvider>
           <ShopProvider>

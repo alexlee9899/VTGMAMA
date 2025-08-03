@@ -67,6 +67,7 @@ export default function TagManagement() {
       const response = await axios.get(`${API_BASE_URL}/product/tag/full`, {
         headers: {
           Authorization: `Bearer ${token}`,
+          "ngrok-skip-browser-warning": "true",
         },
       });
       setTags(response.data);
@@ -108,6 +109,8 @@ export default function TagManagement() {
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
           },
         }
       );
@@ -148,6 +151,8 @@ export default function TagManagement() {
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
           },
         }
       );
@@ -185,6 +190,8 @@ export default function TagManagement() {
       await axios.delete(`${API_BASE_URL}/product/tag/delete/${tagId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true",
         },
       });
       fetchTags(); // 重新获取标签列表
@@ -226,6 +233,7 @@ export default function TagManagement() {
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "ngrok-skip-browser-warning": "true",
           },
         }
       );

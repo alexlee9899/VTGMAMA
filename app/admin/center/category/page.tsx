@@ -69,7 +69,14 @@ export default function CategoryManagement() {
   const fetchCategories = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API_BASE_URL}/product/category/full`);
+      const response = await axios.get(
+        `${API_BASE_URL}/product/category/full`,
+        {
+          headers: {
+            "ngrok-skip-browser-warning": "true",
+          },
+        }
+      );
       setCategories(response.data);
 
       // Filter parent categories (categories with parent_id as null)
@@ -104,11 +111,13 @@ export default function CategoryManagement() {
         `${API_BASE_URL}/product/category/create`,
         {
           name: newCategory.name,
-          parent_id: newCategory.parent_id,
+          parent_id: newCategory.parent_id || null,
         },
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
           },
         }
       );
@@ -144,11 +153,13 @@ export default function CategoryManagement() {
         `${API_BASE_URL}/product/category/update/${editCategory._id}`,
         {
           name: editCategory.name,
-          parent_id: editCategory.parent_id,
+          parent_id: editCategory.parent_id || null,
         },
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
           },
         }
       );
@@ -191,6 +202,8 @@ export default function CategoryManagement() {
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
           },
         }
       );
@@ -233,6 +246,7 @@ export default function CategoryManagement() {
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "ngrok-skip-browser-warning": "true",
           },
         }
       );

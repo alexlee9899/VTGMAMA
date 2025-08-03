@@ -87,6 +87,8 @@ export default function CreatePromotePage() {
       await axios.post(`${API_BASE_URL}/promote/create`, requestData, {
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true",
         },
       });
 

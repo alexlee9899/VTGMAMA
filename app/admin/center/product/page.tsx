@@ -79,6 +79,7 @@ export default function ProductManagement() {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
           },
         });
 
@@ -123,6 +124,7 @@ export default function ProductManagement() {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true",
         },
       });
 
@@ -148,7 +150,11 @@ export default function ProductManagement() {
   // 获取分类列表
   const fetchCategories = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/product/category/full`);
+      const response = await fetch(`${API_BASE_URL}/product/category/full`, {
+        headers: {
+          "ngrok-skip-browser-warning": "true",
+        },
+      });
       if (!response.ok) {
         throw new Error(`Request failed: ${response.status}`);
       }
@@ -202,6 +208,7 @@ export default function ProductManagement() {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true",
         },
       });
 

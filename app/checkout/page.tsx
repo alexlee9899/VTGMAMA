@@ -192,7 +192,10 @@ export default function CheckoutPage() {
       if (token) addressBody.token = token;
       const res = await fetch(`${API_BASE_URL}/order/add_address`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true",
+        },
         body: JSON.stringify(addressBody),
       });
       if (!res.ok) throw new Error("Failed to save address");
@@ -244,7 +247,10 @@ export default function CheckoutPage() {
       if (token) orderBody.token = token;
       const res = await fetch(`${API_BASE_URL}/order/create`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true",
+        },
         body: JSON.stringify(orderBody),
       });
       if (!res.ok) throw new Error("Payment failed");

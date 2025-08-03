@@ -82,11 +82,27 @@ const OrderCard = ({
     setError("");
 
     try {
+      setIsLoading(true);
+      const token = localStorage.getItem("adminToken") || "";
+      if (!token) {
+        throw new Error("Authorization token not found");
+      }
+
       // 发送发货请求
-      const response = await axios.post(`${API_BASE_URL}/order/ship_order`, {
-        order_id: selectedOrder.order_id,
-        track_number: trackNumber,
-      });
+      const response = await axios.post(
+        `${API_BASE_URL}/order/ship_order`,
+        {
+          order_id: selectedOrder.order_id,
+          track_number: trackNumber,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+          },
+        }
+      );
 
       // 请求成功
       setSuccess("发货成功！订单状态已更新");

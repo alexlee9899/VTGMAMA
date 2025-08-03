@@ -47,6 +47,7 @@ export default function EditPromotePage() {
         const response = await axios.get(`${API_BASE_URL}/promote/get/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
+            "ngrok-skip-browser-warning": "true",
           },
         });
 
@@ -134,6 +135,8 @@ export default function EditPromotePage() {
       await axios.post(`${API_BASE_URL}/promote/update/${id}`, requestData, {
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true",
         },
       });
 
