@@ -21,6 +21,16 @@ const nextConfig = {
       },
     ],
   },
+
+  // 添加API重写规则
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*", // 前端访问 /api/xxx
+        destination: "http://3.25.93.171:8000/:path*", // 实际去请求
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
