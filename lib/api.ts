@@ -23,6 +23,7 @@ async function fetchApi<T>(
   
   const headers = {
     "Content-Type": "application/json",
+    "ngrok-skip-browser-warning": "true", // 添加跳过ngrok警告的头部
     ...(options.headers || {}),
   };
 
@@ -108,6 +109,7 @@ export const adminApi = {
     return fetchApi<{ token: string }>("/admin/login", {
       method: "POST",
       body: JSON.stringify({ email, password }),
+      
     });
   },
 

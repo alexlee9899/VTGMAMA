@@ -579,7 +579,7 @@ export default function ProductDetails({
             </label>
             <select
               name="is_published"
-              value={formData.is_published.toString()}
+              value={formData.is_published?.toString() || "true"}
               onChange={handleInputChange}
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-800"
             >
@@ -811,7 +811,38 @@ export default function ProductDetails({
 
         <div className="mt-6 flex justify-end">
           <button
-            onClick={() => setLoading(false)} // 设置为false以避免加载状态
+            onClick={() => {
+              // 切换到编辑模式
+              // 确保表单数据已经正确设置
+              if (product) {
+                setFormData({
+                  name: product.name || "",
+                  description: product.description || "",
+                  base_price: (product.base_price || 0) / 100,
+                  discount_price: (product.discount_price || 0) / 100,
+                  qty: product.qty || 0,
+                  is_published:
+                    product.is_published !== undefined
+                      ? product.is_published
+                      : true,
+                  category_id:
+                    product.product_category && product.product_category[0]
+                      ? product.product_category[0]._id
+                      : "",
+                });
+              }
+              // 关闭当前视图并通知父组件要编辑这个产品
+              onClose();
+              // 通知父组件需要编辑这个产品
+              if (productId && onProductUpdated) {
+                // 触发一个微小更新以通知父组件
+                onProductUpdated(productId, {
+                  // 只更新名称，但保持相同的值，这样就不会实际改变数据
+                  // 但会触发父组件的更新处理
+                  name: product.name,
+                });
+              }
+            }}
             className="mr-3 px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700"
             disabled={loading}
           >

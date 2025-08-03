@@ -126,9 +126,17 @@ export default function ImageManager({
         throw new Error("Unauthorized, please login");
       }
 
-      await axios.delete(`${API_BASE_URL}/product/delete_image/${productId}`, {
-        data: { message: imageToDelete },
-      });
+      await axios.delete(
+        `${API_BASE_URL}/product/delete_image/${productId}`,
+
+        {
+          data: { image: imageToDelete },
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       // Update local state
       const newImages = [...images];
