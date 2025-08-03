@@ -12,7 +12,6 @@ export default function PromotePage() {
   const [error, setError] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedPromoId, setSelectedPromoId] = useState<string | null>(null);
-  const router = useRouter();
 
   const getAdminToken = () => {
     if (typeof window !== "undefined") {
