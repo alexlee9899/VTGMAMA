@@ -10,6 +10,7 @@ import {
   FiTrash2,
 } from "react-icons/fi";
 import dynamic from "next/dynamic";
+import { API_BASE_URL } from "@/lib/config";
 
 // 动态导入ImageManager组件
 const ImageManager = dynamic(() => import("./ImageManager"), { ssr: false });
@@ -112,11 +113,11 @@ export default function ProductDetails({
           setLoading(true);
           const token = getAdminToken();
           if (!token) {
-            throw new Error("未授权，请先登录");
+            throw new Error("Unauthorized, please login");
           }
 
           const response = await axios.get(
-            `http://3.25.93.171:8000/product/${productId}`,
+            `${API_BASE_URL}/product/${productId}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -146,8 +147,8 @@ export default function ProductDetails({
 
           setError(null);
         } catch (err) {
-          console.error("获取产品详情失败:", err);
-          setError("获取产品详情失败，请重试");
+          console.error("Failed to fetch product details:", err);
+          setError("Failed to fetch product details, please try again");
         } finally {
           setLoading(false);
         }
@@ -216,11 +217,11 @@ export default function ProductDetails({
     try {
       const token = getAdminToken();
       if (!token) {
-        throw new Error("未授权，请先登录");
+        throw new Error("Unauthorized, please login");
       }
 
       await axios.post(
-        "http://3.25.93.171:8000/product/category/add_product",
+        `${API_BASE_URL}/product/category/add_product`,
         {
           category_id: categoryId,
           product_id: productId,
@@ -233,7 +234,7 @@ export default function ProductDetails({
         }
       );
     } catch (err) {
-      console.error("添加分类失败:", err);
+      console.error("Failed to add category:", err);
       throw err;
     }
   };
@@ -246,7 +247,7 @@ export default function ProductDetails({
       setLoading(true);
       const token = getAdminToken();
       if (!token) {
-        throw new Error("未授权，请先登录");
+        throw new Error("Unauthorized, please login");
       }
 
       // 准备请求数据，确保价格以分为单位（整数）
@@ -257,7 +258,7 @@ export default function ProductDetails({
       };
 
       const response = await axios.post(
-        "http://3.25.93.171:8000/product/create",
+        `${API_BASE_URL}/product/create`,
         requestBody,
         {
           headers: {
@@ -276,7 +277,7 @@ export default function ProductDetails({
 
       // 获取完整的产品数据（包括分类信息）
       const updatedResponse = await axios.get(
-        `http://3.25.93.171:8000/product/${createdProduct._id}`,
+        `${API_BASE_URL}/product/${createdProduct._id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -287,7 +288,7 @@ export default function ProductDetails({
       // 显示成功消息
       setNotification({
         type: "success",
-        message: "产品添加成功！",
+        message: "Product added successfully!",
       });
 
       // 通知父组件产品已添加
@@ -301,10 +302,13 @@ export default function ProductDetails({
         onClose(); // 关闭窗口
       }, 3000);
     } catch (err) {
-      console.error("添加产品失败:", err);
+      console.error("Failed to add product:", err);
       setNotification({
         type: "error",
-        message: err instanceof Error ? err.message : "添加产品失败，请重试",
+        message:
+          err instanceof Error
+            ? err.message
+            : "Failed to add product, please try again",
       });
       // 3秒后关闭通知
       setTimeout(() => {
@@ -325,7 +329,7 @@ export default function ProductDetails({
       setLoading(true);
       const token = getAdminToken();
       if (!token) {
-        throw new Error("未授权，请先登录");
+        throw new Error("Unauthorized, please login");
       }
 
       const requestBody = {
@@ -339,7 +343,7 @@ export default function ProductDetails({
 
       // 更新产品基本信息
       const response = await axios.put(
-        `http://3.25.93.171:8000/product/${productId}`,
+        `${API_BASE_URL}/product/${productId}`,
         requestBody,
         {
           headers: {
@@ -354,13 +358,16 @@ export default function ProductDetails({
         try {
           await addCategoryToProduct(productId, formData.category_id);
         } catch (categoryError) {
-          console.error("分类更新失败，但产品已更新:", categoryError);
+          console.error(
+            "Category update failed but product was updated:",
+            categoryError
+          );
         }
       }
 
       // 获取更新后的完整产品数据
       const updatedResponse = await axios.get(
-        `http://3.25.93.171:8000/product/${productId}`,
+        `${API_BASE_URL}/product/${productId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -374,7 +381,7 @@ export default function ProductDetails({
       // 显示成功消息
       setNotification({
         type: "success",
-        message: "产品更新成功！",
+        message: "Product updated successfully!",
       });
 
       // 通知父组件产品已更新
@@ -385,10 +392,13 @@ export default function ProductDetails({
         setNotification(null);
       }, 3000);
     } catch (err) {
-      console.error("更新产品失败:", err);
+      console.error("Failed to update product:", err);
       setNotification({
         type: "error",
-        message: err instanceof Error ? err.message : "更新产品失败，请重试",
+        message:
+          err instanceof Error
+            ? err.message
+            : "Failed to update product, please try again",
       });
       // 3秒后关闭通知
       setTimeout(() => {
@@ -404,7 +414,11 @@ export default function ProductDetails({
     if (!productId) return;
 
     // 确认删除
-    if (!window.confirm("确定要删除该产品吗？此操作不可撤销。")) {
+    if (
+      !window.confirm(
+        "Are you sure you want to delete this product? This action cannot be undone."
+      )
+    ) {
       return;
     }
 
@@ -412,10 +426,10 @@ export default function ProductDetails({
       setLoading(true);
       const token = getAdminToken();
       if (!token) {
-        throw new Error("未授权，请先登录");
+        throw new Error("Unauthorized, please login");
       }
 
-      await axios.delete(`http://3.25.93.171:8000/product/${productId}`, {
+      await axios.delete(`${API_BASE_URL}/product/${productId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -425,7 +439,7 @@ export default function ProductDetails({
       // 显示成功消息
       setNotification({
         type: "success",
-        message: "产品删除成功！",
+        message: "Product deleted successfully!",
       });
 
       // 通知父组件产品已删除
@@ -439,10 +453,13 @@ export default function ProductDetails({
         onClose(); // 关闭窗口
       }, 3000);
     } catch (err) {
-      console.error("删除产品失败:", err);
+      console.error("Failed to delete product:", err);
       setNotification({
         type: "error",
-        message: err instanceof Error ? err.message : "删除产品失败，请重试",
+        message:
+          err instanceof Error
+            ? err.message
+            : "Failed to delete product, please try again",
       });
       // 3秒后关闭通知
       setTimeout(() => {
@@ -458,7 +475,7 @@ export default function ProductDetails({
     return (
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          商品分类
+          Category
         </label>
         <select
           name="category_id"
@@ -466,7 +483,7 @@ export default function ProductDetails({
           onChange={handleInputChange}
           className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-800"
         >
-          <option value="">选择分类</option>
+          <option value="">Select Category</option>
           {categories.map((category) => (
             <React.Fragment key={category._id}>
               <option value={category._id}>{category.name}</option>
@@ -489,7 +506,7 @@ export default function ProductDetails({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              商品名称 <span className="text-red-500">*</span>
+              Product Name <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -502,7 +519,7 @@ export default function ProductDetails({
           </div>
           <div className="md:col-span-2">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              商品描述
+              Product Description
             </label>
             <textarea
               name="description"
@@ -514,7 +531,7 @@ export default function ProductDetails({
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              原价 (¥) <span className="text-red-500">*</span>
+              Original Price ($) <span className="text-red-500">*</span>
             </label>
             <input
               type="number"
@@ -529,7 +546,7 @@ export default function ProductDetails({
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              折扣价 (¥) <span className="text-red-500">*</span>
+              Discount Price ($) <span className="text-red-500">*</span>
             </label>
             <input
               type="number"
@@ -544,7 +561,7 @@ export default function ProductDetails({
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              库存数量 <span className="text-red-500">*</span>
+              Inventory Quantity <span className="text-red-500">*</span>
             </label>
             <input
               type="number"
@@ -558,7 +575,7 @@ export default function ProductDetails({
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              发布状态
+              Publication Status
             </label>
             <select
               name="is_published"
@@ -566,8 +583,8 @@ export default function ProductDetails({
               onChange={handleInputChange}
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-800"
             >
-              <option value="true">已发布</option>
-              <option value="false">未发布</option>
+              <option value="true">Published</option>
+              <option value="false">Unpublished</option>
             </select>
           </div>
           {renderCategorySelect()}
@@ -578,14 +595,14 @@ export default function ProductDetails({
             onClick={onClose}
             className="mr-3 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
           >
-            取消
+            Cancel
           </button>
           <button
             type="submit"
             disabled={loading}
             className="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 flex items-center"
           >
-            <FiSave className="mr-1" /> {mode === "add" ? "添加" : "更新"}
+            <FiSave className="mr-1" /> {mode === "add" ? "Add" : "Update"}
           </button>
           {mode === "edit" && productId && (
             <button
@@ -593,7 +610,7 @@ export default function ProductDetails({
               onClick={handleDeleteProduct}
               className="ml-3 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 flex items-center"
             >
-              <FiTrash2 className="mr-1" /> 删除
+              <FiTrash2 className="mr-1" /> Delete
             </button>
           )}
         </div>
@@ -658,33 +675,33 @@ export default function ProductDetails({
           </div>
         ) : (
           <div className="mb-6 w-full h-64 border rounded-md flex items-center justify-center bg-gray-50">
-            <span className="text-gray-500">暂无图片</span>
+            <span className="text-gray-500">No images available</span>
           </div>
         )}
 
         {/* 产品基本信息 */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div>
-            <h3 className="font-medium text-lg mb-2">基本信息</h3>
+            <h3 className="font-medium text-lg mb-2">Basic Information</h3>
             <div className="bg-gray-50 p-4 rounded-md">
               <div className="mb-2">
-                <span className="font-medium">商品名称: </span>
+                <span className="font-medium">Product Name: </span>
                 {product.name}
               </div>
               <div className="mb-2">
-                <span className="font-medium">原价: </span>¥
+                <span className="font-medium">Original Price: </span>$
                 {(product.base_price / 100).toFixed(2)}
               </div>
               <div className="mb-2">
-                <span className="font-medium">折扣价: </span>¥
+                <span className="font-medium">Discount Price: </span>$
                 {(product.discount_price / 100).toFixed(2)}
               </div>
               <div className="mb-2">
-                <span className="font-medium">库存数量: </span>
+                <span className="font-medium">Inventory: </span>
                 {product.qty}
               </div>
               <div>
-                <span className="font-medium">状态: </span>
+                <span className="font-medium">Status: </span>
                 <span
                   className={`px-2 py-1 text-xs rounded-full ${
                     product.is_published
@@ -692,17 +709,17 @@ export default function ProductDetails({
                       : "bg-red-100 text-red-800"
                   }`}
                 >
-                  {product.is_published ? "已发布" : "未发布"}
+                  {product.is_published ? "Published" : "Unpublished"}
                 </span>
               </div>
             </div>
           </div>
 
           <div>
-            <h3 className="font-medium text-lg mb-2">商品描述</h3>
+            <h3 className="font-medium text-lg mb-2">Product Description</h3>
             <div className="bg-gray-50 p-4 rounded-md">
               <p className="whitespace-pre-wrap">
-                {product.description || "暂无描述"}
+                {product.description || "No description available"}
               </p>
             </div>
           </div>
@@ -711,7 +728,7 @@ export default function ProductDetails({
         {/* 分类和标签 */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div>
-            <h3 className="font-medium text-lg mb-2">商品分类</h3>
+            <h3 className="font-medium text-lg mb-2">Product Categories</h3>
             <div className="bg-gray-50 p-4 rounded-md">
               {product.product_category &&
               product.product_category.length > 0 ? (
@@ -723,13 +740,13 @@ export default function ProductDetails({
                   ))}
                 </ul>
               ) : (
-                <p className="text-gray-500">暂未分类</p>
+                <p className="text-gray-500">No categories assigned</p>
               )}
             </div>
           </div>
 
           <div>
-            <h3 className="font-medium text-lg mb-2">商品标签</h3>
+            <h3 className="font-medium text-lg mb-2">Product Tags</h3>
             <div className="bg-gray-50 p-4 rounded-md">
               {product.product_tag && product.product_tag.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
@@ -743,7 +760,7 @@ export default function ProductDetails({
                   ))}
                 </div>
               ) : (
-                <p className="text-gray-500">暂无标签</p>
+                <p className="text-gray-500">No tags assigned</p>
               )}
             </div>
           </div>
@@ -752,7 +769,7 @@ export default function ProductDetails({
         {/* 产品变体 */}
         {product.product_variable && product.product_variable.length > 0 && (
           <div className="mb-6">
-            <h3 className="font-medium text-lg mb-2">商品变体</h3>
+            <h3 className="font-medium text-lg mb-2">Product Variants</h3>
             <div className="bg-white border rounded-md overflow-hidden">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
@@ -761,13 +778,13 @@ export default function ProductDetails({
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      变体名称
+                      Variant Name
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      价格修正
+                      Price Adjustment
                     </th>
                   </tr>
                 </thead>
@@ -781,7 +798,7 @@ export default function ProductDetails({
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">
-                          ¥{(variant.price_modifier / 100).toFixed(2)}
+                          ${(variant.price_modifier / 100).toFixed(2)}
                         </div>
                       </td>
                     </tr>
@@ -798,13 +815,13 @@ export default function ProductDetails({
             className="mr-3 px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700"
             disabled={loading}
           >
-            编辑
+            Edit
           </button>
           <button
             onClick={onClose}
             className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
           >
-            关闭
+            Close
           </button>
         </div>
       </>
@@ -817,7 +834,7 @@ export default function ProductDetails({
         <div className="bg-white p-6 rounded-lg shadow-lg max-w-4xl w-full max-h-[90vh] overflow-auto">
           <div className="flex justify-center my-8">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
-            <p className="mt-4 text-gray-600">加载中...</p>
+            <p className="mt-4 text-gray-600">Loading...</p>
           </div>
         </div>
       </div>

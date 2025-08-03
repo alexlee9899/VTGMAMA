@@ -9,6 +9,16 @@ const nextConfig = {
         hostname: "placehold.co",
         pathname: "**",
       },
+      {
+        protocol: "https",
+        hostname: "vtgmama.s3.ap-southeast-2.amazonaws.com",
+        pathname: "**",
+      },
+      {
+        protocol: "https",
+        hostname: "vtgmama.s3.ap-southeast-2.com",
+        pathname: "**",
+      },
     ],
   },
 };

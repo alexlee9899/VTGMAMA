@@ -14,6 +14,7 @@ import {
 } from "react-icons/fi";
 import { MdEdit } from "react-icons/md";
 import axios from "axios";
+import { API_BASE_URL } from "@/lib/config";
 
 interface ImageManagerProps {
   productId: string;
@@ -122,41 +123,34 @@ export default function ImageManager({
       setIsLoading(true);
       const token = getAdminToken();
       if (!token) {
-        throw new Error("未授权，请先登录");
+        throw new Error("Unauthorized, please login");
       }
 
-      await axios.delete(
-        `http://3.25.93.171:8000/product/delete_image/${productId}`,
-        {
-          data: { image: imageToDelete },
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await axios.delete(`${API_BASE_URL}/product/delete_image/${productId}`, {
+        data: { message: imageToDelete },
+      });
 
-      // 更新本地状态
+      // Update local state
       const newImages = [...images];
       newImages.splice(currentImageIndex, 1);
       setImages(newImages);
 
-      // 调整当前索引
+      // Adjust current index
       if (currentImageIndex >= newImages.length && newImages.length > 0) {
         setCurrentImageIndex(newImages.length - 1);
       }
 
-      setSuccess("图片已成功删除");
+      setSuccess("Image deleted successfully");
 
-      // 通知父组件图片已更新
+      // Notify parent component of image update
       onImagesUpdate(newImages);
 
       setTimeout(() => {
         setSuccess("");
       }, 3000);
     } catch (err) {
-      console.error("删除图片失败:", err);
-      setError("删除图片失败，请重试");
+      console.error("Failed to delete image:", err);
+      setError("Failed to delete image, please try again");
 
       setTimeout(() => {
         setError("");
@@ -172,11 +166,11 @@ export default function ImageManager({
       setIsLoading(true);
       const token = getAdminToken();
       if (!token) {
-        throw new Error("未授权，请先登录");
+        throw new Error("Unauthorized, please login");
       }
 
       await axios.put(
-        `http://3.25.93.171:8000/product/update_images/${productId}`,
+        `${API_BASE_URL}/product/update_images/${productId}`,
         { images },
         {
           headers: {
@@ -186,17 +180,17 @@ export default function ImageManager({
         }
       );
 
-      setSuccess("图片顺序已更新");
+      setSuccess("Image order updated");
 
-      // 通知父组件图片已更新
+      // Notify parent component
       onImagesUpdate(images);
 
       setTimeout(() => {
         setSuccess("");
       }, 3000);
     } catch (err) {
-      console.error("更新图片顺序失败:", err);
-      setError("更新图片顺序失败，请重试");
+      console.error("Failed to update image order:", err);
+      setError("Failed to update image order, please try again");
 
       setTimeout(() => {
         setError("");
@@ -233,21 +227,21 @@ export default function ImageManager({
       completedCrop.height
     );
 
-    // 转换为base64
+    // Convert to base64
     const base64data = canvas.toDataURL("image/jpeg");
 
     try {
       setIsLoading(true);
       const token = getAdminToken();
       if (!token) {
-        throw new Error("未授权，请先登录");
+        throw new Error("Unauthorized, please login");
       }
 
-      // 去掉base64数据前缀
+      // Remove base64 data prefix
       const base64Image = base64data.replace(/^data:image\/\w+;base64,/, "");
 
       await axios.put(
-        `http://3.25.93.171:8000/product/upload_image/${productId}`,
+        `${API_BASE_URL}/product/upload_image/${productId}`,
         { image_base64: base64Image },
         {
           headers: {
@@ -257,9 +251,9 @@ export default function ImageManager({
         }
       );
 
-      // 刷新产品图片
+      // Refresh product images
       const productResponse = await axios.get(
-        `http://3.25.93.171:8000/product/${productId}`,
+        `${API_BASE_URL}/product/${productId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -270,24 +264,24 @@ export default function ImageManager({
       const updatedImages = productResponse.data.images || [];
       setImages(updatedImages);
 
-      // 将索引设置为新添加的图片
+      // Set index to newly added image
       if (updatedImages.length > 0) {
         setCurrentImageIndex(updatedImages.length - 1);
       }
 
-      setSuccess("图片上传成功");
+      setSuccess("Image uploaded successfully");
       setShowCropModal(false);
       setUploadedImage(null);
 
-      // 通知父组件图片已更新
+      // Notify parent component
       onImagesUpdate(updatedImages);
 
       setTimeout(() => {
         setSuccess("");
       }, 3000);
     } catch (err) {
-      console.error("上传图片失败:", err);
-      setError("上传图片失败，请重试");
+      console.error("Failed to upload image:", err);
+      setError("Failed to upload image, please try again");
 
       setTimeout(() => {
         setError("");
@@ -299,9 +293,9 @@ export default function ImageManager({
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm mt-6">
-      <h2 className="text-lg font-medium mb-4">产品图片管理</h2>
+      <h2 className="text-lg font-medium mb-4">Product Image Management</h2>
 
-      {/* 错误和成功消息 */}
+      {/* Error and success messages */}
       {error && (
         <div className="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
           {error}
@@ -313,7 +307,7 @@ export default function ImageManager({
         </div>
       )}
 
-      {/* 图片预览区域 */}
+      {/* Image preview area */}
       <div className="mb-6">
         <div className="relative w-full h-64 border rounded-md flex items-center justify-center bg-gray-50">
           {images.length > 0 ? (
@@ -342,19 +336,19 @@ export default function ImageManager({
               </div>
             </>
           ) : (
-            <div className="text-gray-500">暂无图片</div>
+            <div className="text-gray-500">No images available</div>
           )}
         </div>
       </div>
 
-      {/* 图片操作按钮 */}
+      {/* Image operation buttons */}
       <div className="flex flex-wrap gap-2 mb-6">
         <button
           onClick={handleSelectFile}
           disabled={isLoading}
           className="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 transition-colors flex items-center gap-1 disabled:bg-gray-400"
         >
-          <FiPlus /> 上传图片
+          <FiPlus /> Upload Image
         </button>
         <input
           ref={fileInputRef}
@@ -373,7 +367,7 @@ export default function ImageManager({
               }
               className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 flex items-center gap-1 disabled:opacity-50"
             >
-              <FiArrowUp /> 上移
+              <FiArrowUp /> Move Up
             </button>
             <button
               onClick={() => moveImage("down")}
@@ -384,27 +378,27 @@ export default function ImageManager({
               }
               className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 flex items-center gap-1 disabled:opacity-50"
             >
-              <FiArrowDown /> 下移
+              <FiArrowDown /> Move Down
             </button>
             <button
               onClick={saveImageOrder}
               disabled={isLoading || images.length <= 1}
               className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center gap-1 disabled:bg-green-400"
             >
-              <FiCheck /> 保存顺序
+              <FiCheck /> Save Order
             </button>
             <button
               onClick={deleteCurrentImage}
               disabled={images.length === 0 || isLoading}
               className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors flex items-center gap-1 disabled:bg-red-400"
             >
-              <FiTrash2 /> 删除图片
+              <FiTrash2 /> Delete Image
             </button>
           </>
         )}
       </div>
 
-      {/* 缩略图预览 */}
+      {/* Thumbnail preview */}
       {images.length > 1 && (
         <div className="flex flex-wrap gap-2 mb-4">
           {images.map((img, index) => (
@@ -425,11 +419,11 @@ export default function ImageManager({
         </div>
       )}
 
-      {/* 图片裁剪模态窗口 */}
+      {/* Image cropping modal */}
       {showCropModal && uploadedImage && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg p-6 w-full max-w-3xl max-h-[90vh] overflow-auto">
-            <h3 className="text-lg font-medium mb-4">图片裁剪</h3>
+            <h3 className="text-lg font-medium mb-4">Crop Image</h3>
             <div className="mb-4">
               <ReactCrop
                 crop={crop}
@@ -453,14 +447,14 @@ export default function ImageManager({
                 }}
                 className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
               >
-                取消
+                Cancel
               </button>
               <button
                 onClick={completeCrop}
                 disabled={isLoading || !completedCrop}
                 className="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 transition-colors disabled:bg-gray-400"
               >
-                {isLoading ? "处理中..." : "确认并上传"}
+                {isLoading ? "Processing..." : "Confirm & Upload"}
               </button>
             </div>
             <canvas
