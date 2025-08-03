@@ -118,16 +118,13 @@ export default function ProductManagement() {
         throw new Error("Authorization token not found");
       }
 
-      const response = await fetch(
-        "http://3.25.93.171:8000/admin/shop_products",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${API_BASE_URL}/admin/shop_products`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         throw new Error(
@@ -151,9 +148,7 @@ export default function ProductManagement() {
   // 获取分类列表
   const fetchCategories = async () => {
     try {
-      const response = await fetch(
-        "http://3.25.93.171:8000/product/category/full"
-      );
+      const response = await fetch(`${API_BASE_URL}/product/category/full`);
       if (!response.ok) {
         throw new Error(`Request failed: ${response.status}`);
       }
@@ -202,16 +197,13 @@ export default function ProductManagement() {
         throw new Error("Authorization token not found");
       }
 
-      const response = await fetch(
-        `http://3.25.93.171:8000/product/${productId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${API_BASE_URL}/product/${productId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
