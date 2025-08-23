@@ -274,7 +274,7 @@ export default function ProductDetails({
       console.log("=======", createdProduct);
       // 如果选择了分类，添加分类关联
       if (formData.category_id) {
-        await addCategoryToProduct(formData._id, formData.category_id);
+        await addCategoryToProduct(createdProduct._id, formData.category_id);
       }
 
       // 获取完整的产品数据（包括分类信息）
