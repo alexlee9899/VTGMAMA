@@ -5,28 +5,28 @@ import Image from "next/image";
 export default function Footer() {
   return (
     <footer className="bg-gray-800 text-white">
-      <div className="container mx-auto px-4 py-12">
+      <div className="container max-w-page mx-auto px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand and Introduction */}
           <div className="col-span-1">
             <div className="flex items-center space-x-2 mb-4">
               <Image
                 src="/logo.png"
-                alt="OnlineShop Logo"
+                alt="VTGMAMA Logo"
                 width={40}
                 height={40}
                 className="w-10 h-10 invert" // Invert colors to make logo visible on dark background
               />
-              <span className="text-xl font-bold">OnlineShop</span>
+              <span className="text-xl font-logo font-bold">VTGMAMA</span>
             </div>
             <p className="text-gray-300 mb-4">
-              OnlineShop is a professional e-commerce platform providing
-              high-quality products and excellent service.
+              VTGMAMA is a professional luxury vintage platform providing
+              high-quality authenticated designer pieces and excellent service.
             </p>
             <div className="flex space-x-4">
               <a
                 href={contactInfo.socialMedia.facebook}
-                className="text-gray-300 hover:text-white"
+                className="text-gray-300 hover:text-white transition-colors"
               >
                 <svg
                   className="h-6 w-6"
@@ -43,7 +43,7 @@ export default function Footer() {
               </a>
               <a
                 href={contactInfo.socialMedia.instagram}
-                className="text-gray-300 hover:text-white"
+                className="text-gray-300 hover:text-white transition-colors"
               >
                 <svg
                   className="h-6 w-6"
@@ -60,7 +60,7 @@ export default function Footer() {
               </a>
               <a
                 href={contactInfo.socialMedia.twitter}
-                className="text-gray-300 hover:text-white"
+                className="text-gray-300 hover:text-white transition-colors"
               >
                 <svg
                   className="h-6 w-6"
@@ -79,27 +79,33 @@ export default function Footer() {
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/" className="text-gray-300 hover:text-white">
+                <Link
+                  href="/"
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
                   Home
                 </Link>
               </li>
               <li>
                 <Link
                   href="/products"
-                  className="text-gray-300 hover:text-white"
+                  className="text-gray-300 hover:text-white transition-colors"
                 >
                   Products
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="text-gray-300 hover:text-white">
+                <Link
+                  href="/about"
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
                   About Us
                 </Link>
               </li>
               <li>
                 <Link
                   href="/contact"
-                  className="text-gray-300 hover:text-white"
+                  className="text-gray-300 hover:text-white transition-colors"
                 >
                   Contact Us
                 </Link>
@@ -112,14 +118,17 @@ export default function Footer() {
             <h3 className="text-lg font-semibold mb-4">Help Center</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/faq" className="text-gray-300 hover:text-white">
+                <Link
+                  href="/faq"
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
                   FAQ
                 </Link>
               </li>
               <li>
                 <Link
                   href="/shipping"
-                  className="text-gray-300 hover:text-white"
+                  className="text-gray-300 hover:text-white transition-colors"
                 >
                   Shipping Information
                 </Link>
@@ -127,7 +136,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/returns"
-                  className="text-gray-300 hover:text-white"
+                  className="text-gray-300 hover:text-white transition-colors"
                 >
                   Returns Policy
                 </Link>
@@ -135,7 +144,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/privacy"
-                  className="text-gray-300 hover:text-white"
+                  className="text-gray-300 hover:text-white transition-colors"
                 >
                   Privacy Policy
                 </Link>
@@ -146,10 +155,10 @@ export default function Footer() {
           {/* Contact Us */}
           <div className="col-span-1">
             <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
-            <ul className="space-y-2">
-              <li className="flex items-start space-x-2">
+            <ul className="space-y-3">
+              <li className="flex items-start space-x-3">
                 <svg
-                  className="h-6 w-6 text-gray-300 mt-0.5"
+                  className="h-5 w-5 text-gray-300 mt-1 flex-shrink-0"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -167,11 +176,13 @@ export default function Footer() {
                     d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                   />
                 </svg>
-                <span className="text-gray-300">{contactInfo.address}</span>
+                <span className="text-gray-300 text-sm">
+                  {contactInfo.address}
+                </span>
               </li>
-              <li className="flex items-start space-x-2">
+              <li className="flex items-start space-x-3">
                 <svg
-                  className="h-6 w-6 text-gray-300 mt-0.5"
+                  className="h-5 w-5 text-gray-300 mt-1 flex-shrink-0"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -183,11 +194,13 @@ export default function Footer() {
                     d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                   />
                 </svg>
-                <span className="text-gray-300">{contactInfo.email}</span>
+                <span className="text-gray-300 text-sm">
+                  {contactInfo.email}
+                </span>
               </li>
-              <li className="flex items-start space-x-2">
+              <li className="flex items-start space-x-3">
                 <svg
-                  className="h-6 w-6 text-gray-300 mt-0.5"
+                  className="h-5 w-5 text-gray-300 mt-1 flex-shrink-0"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -199,14 +212,16 @@ export default function Footer() {
                     d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
                   />
                 </svg>
-                <span className="text-gray-300">{contactInfo.phone}</span>
+                <span className="text-gray-300 text-sm">
+                  {contactInfo.phone}
+                </span>
               </li>
             </ul>
           </div>
         </div>
 
         <div className="mt-12 pt-8 border-t border-gray-700 text-center text-gray-400">
-          <p>© {new Date().getFullYear()} OnlineShop. All Rights Reserved.</p>
+          <p>© {new Date().getFullYear()} VTGMAMA. All Rights Reserved.</p>
         </div>
       </div>
     </footer>
@@ -215,17 +230,17 @@ export default function Footer() {
 
 // Contact info definition for consistency with contact page
 const contactInfo = {
-  address: "123 Shopping Avenue, Business District, New York, NY 10001",
-  phone: "+1 (555) 123-4567",
-  email: "support@onlineshop.com",
+  address: "123 Luxury Avenue, Fashion District, Sydney, NSW 2000",
+  phone: "+61 (02) 1234-5678",
+  email: "support@vtgmama.com",
   hours: [
     "Monday - Friday: 9:00 AM - 6:00 PM",
     "Saturday: 10:00 AM - 4:00 PM",
     "Sunday: Closed",
   ],
   socialMedia: {
-    facebook: "https://facebook.com/onlineshop",
-    twitter: "https://twitter.com/onlineshop",
-    instagram: "https://instagram.com/onlineshop",
+    facebook: "https://facebook.com/vtgmama",
+    twitter: "https://twitter.com/vtgmama",
+    instagram: "https://instagram.com/vtgmama",
   },
 };

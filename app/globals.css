@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Sedan:ital@0;1&family=Inknut+Antiqua:wght@400;600;700&family=Open+Sans:wght@400;500;600;700&family=Bai+Jamjuree:wght@400;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -61,6 +63,96 @@
   }
   
   body {
-    @apply bg-background text-foreground;
+    @apply font-opensans bg-page-bg-primary text-foreground;
+  }
+
+  .section-alt-bg {
+    @apply bg-page-bg-secondary;
+  }
+
+  .page-section {
+    @apply py-16;
+  }
+}
+
+/* 自定义页面组件样式 */
+@layer components {
+  .site-header {
+    @apply bg-white border-b border-gray-200;
+    /* height: auto; */
+    height: 160px;
+  }
+  
+  .hero-inner {
+    @apply grid grid-cols-1 lg:grid-cols-2 gap-8 py-16;
+  }
+  
+  .hero-image-wrap {
+    @apply overflow-hidden rounded-lg;
+  }
+  
+  .hero-image {
+    @apply w-full h-full object-cover;
+  }
+  
+  .hero-content {
+    @apply flex flex-col justify-center;
+    max-width: 489px;
+  }
+  
+  .hero-title {
+    @apply text-4xl md:text-5xl font-bold mb-6;
+  }
+  
+  .hero-copy {
+    @apply text-gray-700 leading-relaxed;
+  }
+  
+  .toolbar {
+    @apply mb-8;
+  }
+  
+  .toolbar-group {
+    @apply flex items-center gap-2;
+  }
+  
+  .product-grid {
+    @apply pb-16;
+  }
+  
+  .product-card {
+    @apply bg-product-bg rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300;
+  }
+  
+  .product-media {
+    @apply aspect-square bg-white flex items-center justify-center p-8;
+  }
+  
+  .product-title {
+    @apply text-lg font-semibold mb-2;
+  }
+  
+  .product-meta {
+    @apply text-gray-600 mb-4;
+  }
+  
+  .product-cta {
+    @apply w-full bg-black text-white py-2 px-4 rounded hover:bg-gray-800 transition-colors duration-200;
+  }
+}
+
+/* Multi-line clamp utilities */
+@layer utilities {
+  .clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }

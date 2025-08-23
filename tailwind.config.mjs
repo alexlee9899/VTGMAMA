@@ -19,7 +19,19 @@ export default {
       },
     },
     extend: {
+      maxWidth: {
+        page: "1440px",
+      },
+      height: {
+        header: "204px",
+      },
+      aspectRatio: {
+        hero: "867/488",
+      },
       colors: {
+        "product-bg": "#F6F2F2",
+        "page-bg-primary": "#FDF7F5",
+        "page-bg-secondary": "#F0EAEA",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -67,6 +79,15 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+      },
+      fontFamily: {
+        sans: ["Inter", "system-ui", "sans-serif"],
+        logo: ["Montserrat", "system-ui", "sans-serif"],
+        playfair: ["Playfair Display", "serif"],
+        sedan: ["Sedan", "serif"],
+        inknut: ["Inknut Antiqua", "serif"],
+        opensans: ["Open Sans", "system-ui", "sans-serif"],
+        bai: ["Bai Jamjuree", "system-ui", "sans-serif"],
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",

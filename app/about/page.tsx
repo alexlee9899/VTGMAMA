@@ -77,7 +77,7 @@ const companyHistory = [
 
 export default function AboutPage() {
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 bg-page-bg-primary min-h-screen">
       <section className="mb-16">
         <h1 className="text-3xl font-bold mb-8 text-center">
           About Our Company
