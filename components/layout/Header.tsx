@@ -167,8 +167,9 @@ export default function Header() {
 
         {/* 第二行：导航（Sedan 字体） */}
         {!isAdminCenter && (
-          <div className="flex justify-center pb-2">
-            <nav className="flex items-center gap-8 font-sedan text-sm text-gray-800">
+          <div className="pb-2 lg:flex lg:justify-center">
+            {/* 移动端可横向滚动，避免超出父容器；大屏居中且不需要滚动 */}
+            <nav className="flex items-center gap-6 sm:gap-8 font-sedan text-sm text-gray-800 overflow-x-auto whitespace-nowrap px-4 -mx-4 lg:overflow-visible lg:whitespace-normal lg:px-0 lg:mx-0">
               <Link href="/">Home</Link>
               <Link href="/products">Sales</Link>
               <Link href="/products">Bags</Link>
